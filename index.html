@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OTC Dashboard (Working Charts)</title>
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #chart { height: 500px; width: 100%; border: 1px solid #ddd; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>OTC Market Dashboard</h1>
+  <div id="chart"></div>
+
+  <script>
+    // 1. Initialize Chart
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+      width: document.getElementById('chart').clientWidth,
+      height: 500,
+      layout: { backgroundColor: '#fff', textColor: '#333' },
+      grid: { vertLines: { color: '#eee' }, horzLines: { color: '#eee' } }
+    });
+
+    // 2. Add Series (Candlestick by default)
+    const series = chart.addCandlestickSeries();
+
+    // 3. Generate Simulated Data (WORKING WITHOUT API)
+    function generateData() {
+      const now = Math.floor(Date.now() / 1000);
+      const data = [];
+      let price = 100;
+      
+      for (let i = 0; i < 100; i++) {
+        price += Math.random() * 4 - 2;
+        data.push({
+          time: now - (100 - i) * 86400,
+          open: price,
+          high: price + Math.random() * 5,
+          low: price - Math.random() * 5,
+          close: price + Math.random() * 2 - 1
+        });
+      }
+      return data;
+    }
+
+    // 4. Load Data
+    series.setData(generateData());
+
+    // 5. Auto-refresh every 15 seconds
+    setInterval(() => series.update(generateData()[0]), 15000);
+  </script>
+</body>
+</html>
